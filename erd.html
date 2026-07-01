@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مخطط قاعدة البيانات - حجم صغير للسكرين</title>
+    <!-- تضمين مكتبة html2pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --primary-color: #3b82f6;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .instructions {
+            background-color: #dcfce7;
+            border-right: 4px solid #22c55e;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            max-width: 800px;
+            width: 95%;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        .mermaid-wrapper {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            max-width: 1000px;
+            /* تصغير العرض الأقصى للرسمة */
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+            /* منع التمرير لسهولة أخذ سكرين */
+        }
+
+        .mermaid {
+            width: 100%;
+            /* تصغير حجم الرسمة برمجياً */
+            transform: scale(0.85);
+            transform-origin: top center;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* إخفاء أي شيء غير اسم العمود ووصفه العربي */
+        .typeLabel,
+        .attributeType,
+        .type,
+        .attributeKey,
+        .key {
+            display: none !important;
+        }
+
+        @media print {
+
+            .btn-group,
+            .instructions,
+            .header {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .mermaid-wrapper {
+                box-shadow: none;
+                width: 100%;
+                padding: 0;
+            }
+
+            .mermaid {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>مخطط قاعدة البيانات</h1>
+    </div>
+
+    <div class="instructions">
+        تم تصغير حجم الرسمة بنسبة 15% لتناسب الشاشة وتسهيل أخذ "Screenshot".
+    </div>
+
+    <div id="pdf-area" class="mermaid-wrapper">
+        <div class="mermaid">
+            erDiagram
+            users {
+            v id "المعرف"
+            v name "الاسم"
+            v email "البريد"
+            v password "الرقم السري"
+            v role "الدور"
+            v phone "الهاتف"
+            v address "العنوان"
+            }
+
+            technicians {
+            v id "المعرف"
+            v user_id "المستخدم"
+            v category_id "القسم"
+            v experience_years "سنوات الخبرة"
+            v hourly_rate "سعر الساعة"
+            v availability "التوفر"
+            v city "المدينة"
+            v bio "نبذة"
+            v rating "التقييم"
+            v is_available "حالة التوفر"
+            }
+
+            categories {
+            v id "المعرف"
+            v name "الاسم"
+            v description "الوصف"
+            v image "الصورة"
+            }
+
+            services {
+            v id "المعرف"
+            v name "الاسم"
+            v description "الوصف"
+            v price "السعر"
+            v estimated_time "الوقت"
+            v category_id "القسم"
+            v image "الصورة"
+            }
+
+            service_requests {
+            v id "المعرف"
+            v user_id "العميل"
+            v technician_id "الفني"
+            v service_id "الخدمة"
+            v status "الحالة"
+            v requested_date "التاريخ"
+            v requested_time "الوقت"
+            v address "العنوان"
+            v phone "الهاتف"
+            v notes "ملاحظات"
+            }
+
+            reviews {
+            v id "المعرف"
+            v service_request_id "الطلب"
+            v user_id "العميل"
+            v technician_id "الفني"
+            v rating "التقييم"
+            v comment "التعليق"
+            }
+
+            users ||--o| technicians : ""
+            users ||--o{ service_requests : ""
+            users ||--o{ reviews : ""
+
+            categories ||--o{ technicians : ""
+            categories ||--o{ services : ""
+
+            technicians ||--o{ service_requests : ""
+            technicians ||--o{ reviews : ""
+
+            services ||--o{ service_requests : ""
+            service_requests ||--o{ reviews : ""
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn" style="background-color: #10b981;" onclick="exportToPDF()">📥 تحميل PDF</button>
+        <button class="btn" onclick="window.print()">🖨️ طباعة</button>
+    </div>
+
+    <script>
+        function exportToPDF() {
+            const element = document.getElementById('pdf-area');
+            const opt = {
+                margin: 5,
+                filename: 'erd_compact.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            er: {
+                fontSize: 14, /* تصغير خط النصوص */
+                entityPadding: 10 /* تصغير المسافات بين الحقول */
+            },
+            securityLevel: 'loose'
+        });
+    </script>
+</body>
+
+</html>
